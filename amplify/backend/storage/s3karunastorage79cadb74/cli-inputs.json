@@ -1,0 +1,10 @@
+{
+  "resourceName": "s3karunastorage79cadb74",
+  "bucketName": "karuna-storage-79cadb74",
+  "policyUUID": "31ac31c9",
+  "storageAccess": "auth",
+  "guestAccess": [],
+  "authAccess": [
+    "CREATE_AND_UPDATE"
+  ]
+}

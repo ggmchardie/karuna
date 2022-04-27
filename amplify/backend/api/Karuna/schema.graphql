@@ -1,0 +1,20 @@
+type Users @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  emailAddress: AWSEmail
+  dateCreated: AWSDate
+  accountType: String
+  accountStatus: Boolean
+  LocatedPersons: [LocatedPersons] @hasMany(indexName: "byUsers", fields: ["id"])
+}
+
+type LocatedPersons @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  surname: String
+  firstName: String
+  location: String
+  photoPath: AWSURL
+  dateEntered: AWSDate
+  status: String
+  hasPhoto: Boolean
+  usersID: ID! @index(name: "byUsers")
+}

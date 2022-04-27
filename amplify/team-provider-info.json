@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-karuna-staging-151544-authRole",
+      "UnauthRoleArn": "arn:aws:iam::650731339339:role/amplify-karuna-staging-151544-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::650731339339:role/amplify-karuna-staging-151544-authRole",
+      "Region": "ap-southeast-2",
+      "DeploymentBucketName": "amplify-karuna-staging-151544-deployment",
+      "UnauthRoleName": "amplify-karuna-staging-151544-unauthRole",
+      "StackName": "amplify-karuna-staging-151544",
+      "StackId": "arn:aws:cloudformation:ap-southeast-2:650731339339:stack/amplify-karuna-staging-151544/954b9740-bff3-11ec-86af-06923df62d44",
+      "AmplifyAppId": "d3v7nxe37bsvvh"
+    },
+    "categories": {
+      "auth": {
+        "Karuna": {}
+      }
+    }
+  }
+}
