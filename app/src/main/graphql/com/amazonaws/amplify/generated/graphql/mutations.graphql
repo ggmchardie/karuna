@@ -1,0 +1,58 @@
+# this is an auto generated file. This will be overwritten
+mutation CreateLocatedPersons(
+  $input: CreateLocatedPersonsInput!
+  $condition: ModelLocatedPersonsConditionInput
+) {
+  createLocatedPersons(input: $input, condition: $condition) {
+    id
+    surname
+    firstName
+    dateEntered
+    location
+    status
+    hasPhoto
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation UpdateLocatedPersons(
+  $input: UpdateLocatedPersonsInput!
+  $condition: ModelLocatedPersonsConditionInput
+) {
+  updateLocatedPersons(input: $input, condition: $condition) {
+    id
+    surname
+    firstName
+    dateEntered
+    location
+    status
+    hasPhoto
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+mutation DeleteLocatedPersons(
+  $input: DeleteLocatedPersonsInput!
+  $condition: ModelLocatedPersonsConditionInput
+) {
+  deleteLocatedPersons(input: $input, condition: $condition) {
+    id
+    surname
+    firstName
+    dateEntered
+    location
+    status
+    hasPhoto
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}

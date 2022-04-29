@@ -1,0 +1,71 @@
+# this is an auto generated file. This will be overwritten
+query GetLocatedPersons($id: ID!) {
+  getLocatedPersons(id: $id) {
+    id
+    surname
+    firstName
+    dateEntered
+    location
+    status
+    hasPhoto
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+query ListLocatedPersons(
+  $filter: ModelLocatedPersonsFilterInput
+  $limit: Int
+  $nextToken: String
+) {
+  listLocatedPersons(filter: $filter, limit: $limit, nextToken: $nextToken) {
+    items {
+      id
+      surname
+      firstName
+      dateEntered
+      location
+      status
+      hasPhoto
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}
+query SyncLocatedPersons(
+  $filter: ModelLocatedPersonsFilterInput
+  $limit: Int
+  $nextToken: String
+  $lastSync: AWSTimestamp
+) {
+  syncLocatedPersons(
+    filter: $filter
+    limit: $limit
+    nextToken: $nextToken
+    lastSync: $lastSync
+  ) {
+    items {
+      id
+      surname
+      firstName
+      dateEntered
+      location
+      status
+      hasPhoto
+      createdAt
+      updatedAt
+      _version
+      _deleted
+      _lastChangedAt
+    }
+    nextToken
+    startedAt
+  }
+}

@@ -1,7 +1,6 @@
 package com.amplifyframework.datastore.generated.model;
 
 import com.amplifyframework.core.model.temporal.Temporal;
-import com.amplifyframework.core.model.annotations.HasMany;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,40 +26,41 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 })
 public final class Users implements Model {
   public static final QueryField ID = field("Users", "id");
+  public static final QueryField SURNAME = field("Users", "surname");
+  public static final QueryField FIRST_NAME = field("Users", "firstName");
   public static final QueryField EMAIL_ADDRESS = field("Users", "emailAddress");
-  public static final QueryField DATE_CREATED = field("Users", "dateCreated");
   public static final QueryField ACCOUNT_TYPE = field("Users", "accountType");
   public static final QueryField ACCOUNT_STATUS = field("Users", "accountStatus");
   private final @ModelField(targetType="ID", isRequired = true) String id;
-  private final @ModelField(targetType="AWSEmail") String emailAddress;
-  private final @ModelField(targetType="AWSDate") Temporal.Date dateCreated;
+  private final @ModelField(targetType="String") String surname;
+  private final @ModelField(targetType="String") String firstName;
+  private final @ModelField(targetType="String") String emailAddress;
   private final @ModelField(targetType="String") String accountType;
-  private final @ModelField(targetType="Boolean") Boolean accountStatus;
-  private final @ModelField(targetType="LocatedPersons") @HasMany(associatedWith = "usersID", type = LocatedPersons.class) List<LocatedPersons> LocatedPersons = null;
+  private final @ModelField(targetType="String") String accountStatus;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
       return id;
   }
   
-  public String getEmailAddress() {
-      return emailAddress;
+  public String getSurname() {
+      return surname;
   }
   
-  public Temporal.Date getDateCreated() {
-      return dateCreated;
+  public String getFirstName() {
+      return firstName;
+  }
+  
+  public String getEmailAddress() {
+      return emailAddress;
   }
   
   public String getAccountType() {
       return accountType;
   }
   
-  public Boolean getAccountStatus() {
+  public String getAccountStatus() {
       return accountStatus;
-  }
-  
-  public List<LocatedPersons> getLocatedPersons() {
-      return LocatedPersons;
   }
   
   public Temporal.DateTime getCreatedAt() {
@@ -71,10 +71,11 @@ public final class Users implements Model {
       return updatedAt;
   }
   
-  private Users(String id, String emailAddress, Temporal.Date dateCreated, String accountType, Boolean accountStatus) {
+  private Users(String id, String surname, String firstName, String emailAddress, String accountType, String accountStatus) {
     this.id = id;
+    this.surname = surname;
+    this.firstName = firstName;
     this.emailAddress = emailAddress;
-    this.dateCreated = dateCreated;
     this.accountType = accountType;
     this.accountStatus = accountStatus;
   }
@@ -88,8 +89,9 @@ public final class Users implements Model {
       } else {
       Users users = (Users) obj;
       return ObjectsCompat.equals(getId(), users.getId()) &&
+              ObjectsCompat.equals(getSurname(), users.getSurname()) &&
+              ObjectsCompat.equals(getFirstName(), users.getFirstName()) &&
               ObjectsCompat.equals(getEmailAddress(), users.getEmailAddress()) &&
-              ObjectsCompat.equals(getDateCreated(), users.getDateCreated()) &&
               ObjectsCompat.equals(getAccountType(), users.getAccountType()) &&
               ObjectsCompat.equals(getAccountStatus(), users.getAccountStatus()) &&
               ObjectsCompat.equals(getCreatedAt(), users.getCreatedAt()) &&
@@ -101,8 +103,9 @@ public final class Users implements Model {
    public int hashCode() {
     return new StringBuilder()
       .append(getId())
+      .append(getSurname())
+      .append(getFirstName())
       .append(getEmailAddress())
-      .append(getDateCreated())
       .append(getAccountType())
       .append(getAccountStatus())
       .append(getCreatedAt())
@@ -116,8 +119,9 @@ public final class Users implements Model {
     return new StringBuilder()
       .append("Users {")
       .append("id=" + String.valueOf(getId()) + ", ")
+      .append("surname=" + String.valueOf(getSurname()) + ", ")
+      .append("firstName=" + String.valueOf(getFirstName()) + ", ")
       .append("emailAddress=" + String.valueOf(getEmailAddress()) + ", ")
-      .append("dateCreated=" + String.valueOf(getDateCreated()) + ", ")
       .append("accountType=" + String.valueOf(getAccountType()) + ", ")
       .append("accountStatus=" + String.valueOf(getAccountStatus()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
@@ -144,54 +148,65 @@ public final class Users implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
   
   public CopyOfBuilder copyOfBuilder() {
     return new CopyOfBuilder(id,
+      surname,
+      firstName,
       emailAddress,
-      dateCreated,
       accountType,
       accountStatus);
   }
   public interface BuildStep {
     Users build();
     BuildStep id(String id);
+    BuildStep surname(String surname);
+    BuildStep firstName(String firstName);
     BuildStep emailAddress(String emailAddress);
-    BuildStep dateCreated(Temporal.Date dateCreated);
     BuildStep accountType(String accountType);
-    BuildStep accountStatus(Boolean accountStatus);
+    BuildStep accountStatus(String accountStatus);
   }
   
 
   public static class Builder implements BuildStep {
     private String id;
+    private String surname;
+    private String firstName;
     private String emailAddress;
-    private Temporal.Date dateCreated;
     private String accountType;
-    private Boolean accountStatus;
+    private String accountStatus;
     @Override
      public Users build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
         
         return new Users(
           id,
+          surname,
+          firstName,
           emailAddress,
-          dateCreated,
           accountType,
           accountStatus);
     }
     
     @Override
-     public BuildStep emailAddress(String emailAddress) {
-        this.emailAddress = emailAddress;
+     public BuildStep surname(String surname) {
+        this.surname = surname;
         return this;
     }
     
     @Override
-     public BuildStep dateCreated(Temporal.Date dateCreated) {
-        this.dateCreated = dateCreated;
+     public BuildStep firstName(String firstName) {
+        this.firstName = firstName;
+        return this;
+    }
+    
+    @Override
+     public BuildStep emailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
         return this;
     }
     
@@ -202,7 +217,7 @@ public final class Users implements Model {
     }
     
     @Override
-     public BuildStep accountStatus(Boolean accountStatus) {
+     public BuildStep accountStatus(String accountStatus) {
         this.accountStatus = accountStatus;
         return this;
     }
@@ -219,12 +234,23 @@ public final class Users implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String emailAddress, Temporal.Date dateCreated, String accountType, Boolean accountStatus) {
+    private CopyOfBuilder(String id, String surname, String firstName, String emailAddress, String accountType, String accountStatus) {
       super.id(id);
-      super.emailAddress(emailAddress)
-        .dateCreated(dateCreated)
+      super.surname(surname)
+        .firstName(firstName)
+        .emailAddress(emailAddress)
         .accountType(accountType)
         .accountStatus(accountStatus);
+    }
+    
+    @Override
+     public CopyOfBuilder surname(String surname) {
+      return (CopyOfBuilder) super.surname(surname);
+    }
+    
+    @Override
+     public CopyOfBuilder firstName(String firstName) {
+      return (CopyOfBuilder) super.firstName(firstName);
     }
     
     @Override
@@ -233,17 +259,12 @@ public final class Users implements Model {
     }
     
     @Override
-     public CopyOfBuilder dateCreated(Temporal.Date dateCreated) {
-      return (CopyOfBuilder) super.dateCreated(dateCreated);
-    }
-    
-    @Override
      public CopyOfBuilder accountType(String accountType) {
       return (CopyOfBuilder) super.accountType(accountType);
     }
     
     @Override
-     public CopyOfBuilder accountStatus(Boolean accountStatus) {
+     public CopyOfBuilder accountStatus(String accountStatus) {
       return (CopyOfBuilder) super.accountStatus(accountStatus);
     }
   }

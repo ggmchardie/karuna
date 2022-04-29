@@ -1,0 +1,49 @@
+# this is an auto generated file. This will be overwritten
+subscription OnCreateLocatedPersons {
+  onCreateLocatedPersons {
+    id
+    surname
+    firstName
+    dateEntered
+    location
+    status
+    hasPhoto
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnUpdateLocatedPersons {
+  onUpdateLocatedPersons {
+    id
+    surname
+    firstName
+    dateEntered
+    location
+    status
+    hasPhoto
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
+subscription OnDeleteLocatedPersons {
+  onDeleteLocatedPersons {
+    id
+    surname
+    firstName
+    dateEntered
+    location
+    status
+    hasPhoto
+    createdAt
+    updatedAt
+    _version
+    _deleted
+    _lastChangedAt
+  }
+}
