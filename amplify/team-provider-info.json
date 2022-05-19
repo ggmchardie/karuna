@@ -9,11 +9,26 @@
       "UnauthRoleName": "amplify-karuna-staging-151544-unauthRole",
       "StackName": "amplify-karuna-staging-151544",
       "StackId": "arn:aws:cloudformation:ap-southeast-2:650731339339:stack/amplify-karuna-staging-151544/954b9740-bff3-11ec-86af-06923df62d44",
-      "AmplifyAppId": "d3v7nxe37bsvvh"
+      "AmplifyAppId": "d3v7nxe37bsvvh",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-karuna-staging-151544-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
         "Karuna": {}
+      },
+      "function": {
+        "fnKarunaUser": {
+          "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
+          "s3Key": "amplify-builds/fnKarunaUser-7674306549354d64542b-build.zip"
+        },
+        "fnKarunaSearch": {
+          "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
+          "s3Key": "amplify-builds/fnKarunaSearch-6d4c43647463324c7a46-build.zip"
+        },
+        "fnKarunaUpload": {
+          "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
+          "s3Key": "amplify-builds/fnKarunaUpload-67694d684d37686e6474-build.zip"
+        }
       }
     }
   }

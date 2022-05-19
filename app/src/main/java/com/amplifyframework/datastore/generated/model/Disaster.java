@@ -1,5 +1,6 @@
 package com.amplifyframework.datastore.generated.model;
 
+import com.amplifyframework.core.model.annotations.HasMany;
 import com.amplifyframework.core.model.temporal.Temporal;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public final class Disaster implements Model {
   private final @ModelField(targetType="Float") Double latitude;
   private final @ModelField(targetType="Float") Double longitude;
   private final @ModelField(targetType="Int") Integer affectedDistanceFromLocation;
+  private final @ModelField(targetType="LocatedPersons") @HasMany(associatedWith = "disasterID", type = LocatedPersons.class) List<LocatedPersons> fk_disaster = null;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
@@ -55,6 +57,10 @@ public final class Disaster implements Model {
   
   public Integer getAffectedDistanceFromLocation() {
       return affectedDistanceFromLocation;
+  }
+  
+  public List<LocatedPersons> getFkDisaster() {
+      return fk_disaster;
   }
   
   public Temporal.DateTime getCreatedAt() {

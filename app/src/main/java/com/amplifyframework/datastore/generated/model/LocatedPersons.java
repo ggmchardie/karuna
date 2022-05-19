@@ -24,6 +24,8 @@ import static com.amplifyframework.core.model.query.predicate.QueryField.field;
 @ModelConfig(pluralName = "LocatedPersons", authRules = {
   @AuthRule(allow = AuthStrategy.PUBLIC, operations = { ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ })
 })
+@Index(name = "byUsers", fields = {"uploadedByUsersId"})
+@Index(name = "byDisaster", fields = {"disasterID"})
 public final class LocatedPersons implements Model {
   public static final QueryField ID = field("LocatedPersons", "id");
   public static final QueryField SURNAME = field("LocatedPersons", "surname");
@@ -32,8 +34,8 @@ public final class LocatedPersons implements Model {
   public static final QueryField LOCATION = field("LocatedPersons", "location");
   public static final QueryField STATUS = field("LocatedPersons", "status");
   public static final QueryField HAS_PHOTO = field("LocatedPersons", "hasPhoto");
-  public static final QueryField UPLOADED_BY_USER = field("LocatedPersons", "uploadedByUser");
-  public static final QueryField DISASTER_ID = field("LocatedPersons", "disasterId");
+  public static final QueryField UPLOADED_BY_USERS_ID = field("LocatedPersons", "uploadedByUsersId");
+  public static final QueryField DISASTER_ID = field("LocatedPersons", "disasterID");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String") String surname;
   private final @ModelField(targetType="String") String firstName;
@@ -41,8 +43,8 @@ public final class LocatedPersons implements Model {
   private final @ModelField(targetType="String") String location;
   private final @ModelField(targetType="String") String status;
   private final @ModelField(targetType="Boolean") Boolean hasPhoto;
-  private final @ModelField(targetType="String") String uploadedByUser;
-  private final @ModelField(targetType="String") String disasterId;
+  private final @ModelField(targetType="ID", isRequired = true) String uploadedByUsersId;
+  private final @ModelField(targetType="ID", isRequired = true) String disasterID;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
@@ -73,12 +75,12 @@ public final class LocatedPersons implements Model {
       return hasPhoto;
   }
   
-  public String getUploadedByUser() {
-      return uploadedByUser;
+  public String getUploadedByUsersId() {
+      return uploadedByUsersId;
   }
   
   public String getDisasterId() {
-      return disasterId;
+      return disasterID;
   }
   
   public Temporal.DateTime getCreatedAt() {
@@ -89,7 +91,7 @@ public final class LocatedPersons implements Model {
       return updatedAt;
   }
   
-  private LocatedPersons(String id, String surname, String firstName, Temporal.Date dateEntered, String location, String status, Boolean hasPhoto, String uploadedByUser, String disasterId) {
+  private LocatedPersons(String id, String surname, String firstName, Temporal.Date dateEntered, String location, String status, Boolean hasPhoto, String uploadedByUsersId, String disasterID) {
     this.id = id;
     this.surname = surname;
     this.firstName = firstName;
@@ -97,8 +99,8 @@ public final class LocatedPersons implements Model {
     this.location = location;
     this.status = status;
     this.hasPhoto = hasPhoto;
-    this.uploadedByUser = uploadedByUser;
-    this.disasterId = disasterId;
+    this.uploadedByUsersId = uploadedByUsersId;
+    this.disasterID = disasterID;
   }
   
   @Override
@@ -116,7 +118,7 @@ public final class LocatedPersons implements Model {
               ObjectsCompat.equals(getLocation(), locatedPersons.getLocation()) &&
               ObjectsCompat.equals(getStatus(), locatedPersons.getStatus()) &&
               ObjectsCompat.equals(getHasPhoto(), locatedPersons.getHasPhoto()) &&
-              ObjectsCompat.equals(getUploadedByUser(), locatedPersons.getUploadedByUser()) &&
+              ObjectsCompat.equals(getUploadedByUsersId(), locatedPersons.getUploadedByUsersId()) &&
               ObjectsCompat.equals(getDisasterId(), locatedPersons.getDisasterId()) &&
               ObjectsCompat.equals(getCreatedAt(), locatedPersons.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), locatedPersons.getUpdatedAt());
@@ -133,7 +135,7 @@ public final class LocatedPersons implements Model {
       .append(getLocation())
       .append(getStatus())
       .append(getHasPhoto())
-      .append(getUploadedByUser())
+      .append(getUploadedByUsersId())
       .append(getDisasterId())
       .append(getCreatedAt())
       .append(getUpdatedAt())
@@ -152,15 +154,15 @@ public final class LocatedPersons implements Model {
       .append("location=" + String.valueOf(getLocation()) + ", ")
       .append("status=" + String.valueOf(getStatus()) + ", ")
       .append("hasPhoto=" + String.valueOf(getHasPhoto()) + ", ")
-      .append("uploadedByUser=" + String.valueOf(getUploadedByUser()) + ", ")
-      .append("disasterId=" + String.valueOf(getDisasterId()) + ", ")
+      .append("uploadedByUsersId=" + String.valueOf(getUploadedByUsersId()) + ", ")
+      .append("disasterID=" + String.valueOf(getDisasterId()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
       .toString();
   }
   
-  public static BuildStep builder() {
+  public static UploadedByUsersIdStep builder() {
       return new Builder();
   }
   
@@ -194,9 +196,19 @@ public final class LocatedPersons implements Model {
       location,
       status,
       hasPhoto,
-      uploadedByUser,
-      disasterId);
+      uploadedByUsersId,
+      disasterID);
   }
+  public interface UploadedByUsersIdStep {
+    DisasterIdStep uploadedByUsersId(String uploadedByUsersId);
+  }
+  
+
+  public interface DisasterIdStep {
+    BuildStep disasterId(String disasterId);
+  }
+  
+
   public interface BuildStep {
     LocatedPersons build();
     BuildStep id(String id);
@@ -206,21 +218,19 @@ public final class LocatedPersons implements Model {
     BuildStep location(String location);
     BuildStep status(String status);
     BuildStep hasPhoto(Boolean hasPhoto);
-    BuildStep uploadedByUser(String uploadedByUser);
-    BuildStep disasterId(String disasterId);
   }
   
 
-  public static class Builder implements BuildStep {
+  public static class Builder implements UploadedByUsersIdStep, DisasterIdStep, BuildStep {
     private String id;
+    private String uploadedByUsersId;
+    private String disasterID;
     private String surname;
     private String firstName;
     private Temporal.Date dateEntered;
     private String location;
     private String status;
     private Boolean hasPhoto;
-    private String uploadedByUser;
-    private String disasterId;
     @Override
      public LocatedPersons build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -233,8 +243,22 @@ public final class LocatedPersons implements Model {
           location,
           status,
           hasPhoto,
-          uploadedByUser,
-          disasterId);
+          uploadedByUsersId,
+          disasterID);
+    }
+    
+    @Override
+     public DisasterIdStep uploadedByUsersId(String uploadedByUsersId) {
+        Objects.requireNonNull(uploadedByUsersId);
+        this.uploadedByUsersId = uploadedByUsersId;
+        return this;
+    }
+    
+    @Override
+     public BuildStep disasterId(String disasterId) {
+        Objects.requireNonNull(disasterId);
+        this.disasterID = disasterId;
+        return this;
     }
     
     @Override
@@ -273,18 +297,6 @@ public final class LocatedPersons implements Model {
         return this;
     }
     
-    @Override
-     public BuildStep uploadedByUser(String uploadedByUser) {
-        this.uploadedByUser = uploadedByUser;
-        return this;
-    }
-    
-    @Override
-     public BuildStep disasterId(String disasterId) {
-        this.disasterId = disasterId;
-        return this;
-    }
-    
     /** 
      * @param id id
      * @return Current Builder instance, for fluent method chaining
@@ -297,16 +309,26 @@ public final class LocatedPersons implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String surname, String firstName, Temporal.Date dateEntered, String location, String status, Boolean hasPhoto, String uploadedByUser, String disasterId) {
+    private CopyOfBuilder(String id, String surname, String firstName, Temporal.Date dateEntered, String location, String status, Boolean hasPhoto, String uploadedByUsersId, String disasterId) {
       super.id(id);
-      super.surname(surname)
+      super.uploadedByUsersId(uploadedByUsersId)
+        .disasterId(disasterId)
+        .surname(surname)
         .firstName(firstName)
         .dateEntered(dateEntered)
         .location(location)
         .status(status)
-        .hasPhoto(hasPhoto)
-        .uploadedByUser(uploadedByUser)
-        .disasterId(disasterId);
+        .hasPhoto(hasPhoto);
+    }
+    
+    @Override
+     public CopyOfBuilder uploadedByUsersId(String uploadedByUsersId) {
+      return (CopyOfBuilder) super.uploadedByUsersId(uploadedByUsersId);
+    }
+    
+    @Override
+     public CopyOfBuilder disasterId(String disasterId) {
+      return (CopyOfBuilder) super.disasterId(disasterId);
     }
     
     @Override
@@ -337,16 +359,6 @@ public final class LocatedPersons implements Model {
     @Override
      public CopyOfBuilder hasPhoto(Boolean hasPhoto) {
       return (CopyOfBuilder) super.hasPhoto(hasPhoto);
-    }
-    
-    @Override
-     public CopyOfBuilder uploadedByUser(String uploadedByUser) {
-      return (CopyOfBuilder) super.uploadedByUser(uploadedByUser);
-    }
-    
-    @Override
-     public CopyOfBuilder disasterId(String disasterId) {
-      return (CopyOfBuilder) super.disasterId(disasterId);
     }
   }
   

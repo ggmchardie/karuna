@@ -10,6 +10,9 @@ public class LocatedPerson {
     private String location;
     private String status;
     private Boolean hasPhoto;
+    private String uploadedBy;
+    private String disasterId;
+
 
     public LocatedPerson() {
     }
@@ -23,12 +26,15 @@ public class LocatedPerson {
         this.hasPhoto = hasPhoto;
     }
 
-    public Temporal.Date getDate() {
-        return dateEntered;
-    }
-
-    public void setDate(Temporal.Date date) {
-        this.dateEntered = date;
+    public LocatedPerson(Temporal.Date dateEntered, String surname, String firstName, String location, String status, Boolean hasPhoto, String uploadedBy, String disasterId) {
+        this.dateEntered = dateEntered;
+        this.surname = surname;
+        this.firstName = firstName;
+        this.location = location;
+        this.status = status;
+        this.hasPhoto = hasPhoto;
+        this.uploadedBy = uploadedBy;
+        this.disasterId = disasterId;
     }
 
     public String getSurname() {
@@ -69,5 +75,29 @@ public class LocatedPerson {
 
     public void setHasPhoto(Boolean hasPhoto) {
         this.hasPhoto = hasPhoto;
+    }
+
+    public Temporal.Date getDateEntered() {
+        return dateEntered;
+    }
+
+    public void setDateEntered(Temporal.Date dateEntered) {
+        this.dateEntered = dateEntered;
+    }
+
+    public String getUploadedBy() {
+        return uploadedBy;
+    }
+
+    public void setUploadedBy(String uploadedBy) {
+        this.uploadedBy = uploadedBy;
+    }
+
+    public String getDisasterId() {
+        return disasterId;
+    }
+
+    public void setDisasterId(String disasterId) {
+        this.disasterId = disasterId;
     }
 }

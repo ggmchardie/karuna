@@ -6,8 +6,8 @@ type LocatedPersons @model @auth(rules: [{allow: public}]) {
   location: String
   status: String
   hasPhoto: Boolean
-  uploadedByUser: String
-  disasterId: String
+  uploadedByUsersId: ID! @index(name: "byUsers")
+  disasterID: ID! @index(name: "byDisaster")
 }
 
 type Disaster @model @auth(rules: [{allow: public}]) {
@@ -16,6 +16,7 @@ type Disaster @model @auth(rules: [{allow: public}]) {
   latitude: Float
   longitude: Float
   affectedDistanceFromLocation: Int
+  fk_disaster: [LocatedPersons] @hasMany(indexName: "byDisaster", fields: ["id"])
 }
 
 type Users @model @auth(rules: [{allow: public}]) {
@@ -25,6 +26,8 @@ type Users @model @auth(rules: [{allow: public}]) {
   emailAddress: String
   accountType: String
   accountStatus: String
+  fk_userid: [LocatedPersons] @hasMany(indexName: "byUsers", fields: ["id"])
+  awsUserId: ID
 }
 
 type VerifiedOrganisations @model @auth(rules: [{allow: public}]) {

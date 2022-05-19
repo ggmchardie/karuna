@@ -1,5 +1,6 @@
 package com.amplifyframework.datastore.generated.model;
 
+import com.amplifyframework.core.model.annotations.HasMany;
 import com.amplifyframework.core.model.temporal.Temporal;
 
 import java.util.List;
@@ -31,12 +32,15 @@ public final class Users implements Model {
   public static final QueryField EMAIL_ADDRESS = field("Users", "emailAddress");
   public static final QueryField ACCOUNT_TYPE = field("Users", "accountType");
   public static final QueryField ACCOUNT_STATUS = field("Users", "accountStatus");
+  public static final QueryField AWS_USER_ID = field("Users", "awsUserId");
   private final @ModelField(targetType="ID", isRequired = true) String id;
   private final @ModelField(targetType="String") String surname;
   private final @ModelField(targetType="String") String firstName;
   private final @ModelField(targetType="String") String emailAddress;
   private final @ModelField(targetType="String") String accountType;
   private final @ModelField(targetType="String") String accountStatus;
+  private final @ModelField(targetType="LocatedPersons") @HasMany(associatedWith = "uploadedByUsersId", type = LocatedPersons.class) List<LocatedPersons> fk_userid = null;
+  private final @ModelField(targetType="ID") String awsUserId;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime createdAt;
   private @ModelField(targetType="AWSDateTime", isReadOnly = true) Temporal.DateTime updatedAt;
   public String getId() {
@@ -63,6 +67,14 @@ public final class Users implements Model {
       return accountStatus;
   }
   
+  public List<LocatedPersons> getFkUserid() {
+      return fk_userid;
+  }
+  
+  public String getAwsUserId() {
+      return awsUserId;
+  }
+  
   public Temporal.DateTime getCreatedAt() {
       return createdAt;
   }
@@ -71,13 +83,14 @@ public final class Users implements Model {
       return updatedAt;
   }
   
-  private Users(String id, String surname, String firstName, String emailAddress, String accountType, String accountStatus) {
+  private Users(String id, String surname, String firstName, String emailAddress, String accountType, String accountStatus, String awsUserId) {
     this.id = id;
     this.surname = surname;
     this.firstName = firstName;
     this.emailAddress = emailAddress;
     this.accountType = accountType;
     this.accountStatus = accountStatus;
+    this.awsUserId = awsUserId;
   }
   
   @Override
@@ -94,6 +107,7 @@ public final class Users implements Model {
               ObjectsCompat.equals(getEmailAddress(), users.getEmailAddress()) &&
               ObjectsCompat.equals(getAccountType(), users.getAccountType()) &&
               ObjectsCompat.equals(getAccountStatus(), users.getAccountStatus()) &&
+              ObjectsCompat.equals(getAwsUserId(), users.getAwsUserId()) &&
               ObjectsCompat.equals(getCreatedAt(), users.getCreatedAt()) &&
               ObjectsCompat.equals(getUpdatedAt(), users.getUpdatedAt());
       }
@@ -108,6 +122,7 @@ public final class Users implements Model {
       .append(getEmailAddress())
       .append(getAccountType())
       .append(getAccountStatus())
+      .append(getAwsUserId())
       .append(getCreatedAt())
       .append(getUpdatedAt())
       .toString()
@@ -124,6 +139,7 @@ public final class Users implements Model {
       .append("emailAddress=" + String.valueOf(getEmailAddress()) + ", ")
       .append("accountType=" + String.valueOf(getAccountType()) + ", ")
       .append("accountStatus=" + String.valueOf(getAccountStatus()) + ", ")
+      .append("awsUserId=" + String.valueOf(getAwsUserId()) + ", ")
       .append("createdAt=" + String.valueOf(getCreatedAt()) + ", ")
       .append("updatedAt=" + String.valueOf(getUpdatedAt()))
       .append("}")
@@ -149,6 +165,7 @@ public final class Users implements Model {
       null,
       null,
       null,
+      null,
       null
     );
   }
@@ -159,7 +176,8 @@ public final class Users implements Model {
       firstName,
       emailAddress,
       accountType,
-      accountStatus);
+      accountStatus,
+      awsUserId);
   }
   public interface BuildStep {
     Users build();
@@ -169,6 +187,7 @@ public final class Users implements Model {
     BuildStep emailAddress(String emailAddress);
     BuildStep accountType(String accountType);
     BuildStep accountStatus(String accountStatus);
+    BuildStep awsUserId(String awsUserId);
   }
   
 
@@ -179,6 +198,7 @@ public final class Users implements Model {
     private String emailAddress;
     private String accountType;
     private String accountStatus;
+    private String awsUserId;
     @Override
      public Users build() {
         String id = this.id != null ? this.id : UUID.randomUUID().toString();
@@ -189,7 +209,8 @@ public final class Users implements Model {
           firstName,
           emailAddress,
           accountType,
-          accountStatus);
+          accountStatus,
+          awsUserId);
     }
     
     @Override
@@ -222,6 +243,12 @@ public final class Users implements Model {
         return this;
     }
     
+    @Override
+     public BuildStep awsUserId(String awsUserId) {
+        this.awsUserId = awsUserId;
+        return this;
+    }
+    
     /** 
      * @param id id
      * @return Current Builder instance, for fluent method chaining
@@ -234,13 +261,14 @@ public final class Users implements Model {
   
 
   public final class CopyOfBuilder extends Builder {
-    private CopyOfBuilder(String id, String surname, String firstName, String emailAddress, String accountType, String accountStatus) {
+    private CopyOfBuilder(String id, String surname, String firstName, String emailAddress, String accountType, String accountStatus, String awsUserId) {
       super.id(id);
       super.surname(surname)
         .firstName(firstName)
         .emailAddress(emailAddress)
         .accountType(accountType)
-        .accountStatus(accountStatus);
+        .accountStatus(accountStatus)
+        .awsUserId(awsUserId);
     }
     
     @Override
@@ -266,6 +294,11 @@ public final class Users implements Model {
     @Override
      public CopyOfBuilder accountStatus(String accountStatus) {
       return (CopyOfBuilder) super.accountStatus(accountStatus);
+    }
+    
+    @Override
+     public CopyOfBuilder awsUserId(String awsUserId) {
+      return (CopyOfBuilder) super.awsUserId(awsUserId);
     }
   }
   

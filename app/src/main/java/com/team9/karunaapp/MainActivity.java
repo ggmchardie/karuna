@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
         Amplify.Auth.signInWithWebUI(
                 this,
                 result -> {
+
                     Intent intent = new Intent(this, MainScreen.class);
                     Log.i("AuthQuickStart", result.toString());
                     startActivity(intent);
@@ -30,5 +31,6 @@ public class MainActivity extends AppCompatActivity {
                 result -> Log.i("AmplifyQuickstart", result.toString()),
                 error -> Log.e("AmplifyQuickstart", error.toString())
         );
+
     }
 }

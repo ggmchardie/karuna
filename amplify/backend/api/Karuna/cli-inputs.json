@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "Karuna",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-e1b5e6e8-b771-4d51-8e30-0f7fb52e4f24/amplify/backend/api/Karuna/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-d82066c1-55f9-42c5-82f7-1107f2068bb0/amplify/backend/api/Karuna/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
       "keyDescription": "api key description",
