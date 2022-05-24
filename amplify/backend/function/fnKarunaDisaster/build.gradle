@@ -12,13 +12,6 @@ repositories {
 dependencies {
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.0'
     implementation 'com.amazonaws:aws-lambda-java-events:2.2.7'
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.4'
-    implementation 'mysql:mysql-connector-java:8.0.29'
-    implementation 'software.amazon.awssdk:rekognition:2.17.194'
-    implementation 'org.apache.logging.log4j:log4j-api:2.17.1'
-    implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
-    runtimeOnly 'org.apache.logging.log4j:log4j-slf4j18-impl:2.17.1'
-    runtimeOnly 'com.amazonaws:aws-lambda-java-log4j2:1.5.1'
 }
 
 jar.baseName = 'latest_build'

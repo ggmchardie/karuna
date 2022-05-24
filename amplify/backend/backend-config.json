@@ -27,14 +27,6 @@
       "dependsOn": [
         {
           "category": "function",
-          "resourceName": "fnKarunaUser",
-          "attributes": [
-            "Name",
-            "Arn"
-          ]
-        },
-        {
-          "category": "function",
           "resourceName": "fnKarunaSearch",
           "attributes": [
             "Name",
@@ -44,6 +36,22 @@
         {
           "category": "function",
           "resourceName": "fnKarunaUpload",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "fnKarunaUser",
+          "attributes": [
+            "Name",
+            "Arn"
+          ]
+        },
+        {
+          "category": "function",
+          "resourceName": "fnKarunaDisaster",
           "attributes": [
             "Name",
             "Arn"
@@ -109,6 +117,11 @@
       "service": "Lambda"
     },
     "fnKarunaUpload": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "fnKarunaDisaster": {
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"

@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/amplify" />
             <option value="$PROJECT_DIR$/amplify/backend" />
             <option value="$PROJECT_DIR$/amplify/backend/function" />
+            <option value="$PROJECT_DIR$/amplify/backend/function/fnKarunaDisaster" />
             <option value="$PROJECT_DIR$/amplify/backend/function/fnKarunaSearch" />
             <option value="$PROJECT_DIR$/amplify/backend/function/fnKarunaUpload" />
             <option value="$PROJECT_DIR$/amplify/backend/function/fnKarunaUser" />

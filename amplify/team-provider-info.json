@@ -19,15 +19,19 @@
       "function": {
         "fnKarunaUser": {
           "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
-          "s3Key": "amplify-builds/fnKarunaUser-7674306549354d64542b-build.zip"
+          "s3Key": "amplify-builds/fnKarunaUser-2f41713754564669337a-build.zip"
         },
         "fnKarunaSearch": {
           "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
-          "s3Key": "amplify-builds/fnKarunaSearch-6d4c43647463324c7a46-build.zip"
+          "s3Key": "amplify-builds/fnKarunaSearch-422f4962676979494f2b-build.zip"
         },
         "fnKarunaUpload": {
           "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
-          "s3Key": "amplify-builds/fnKarunaUpload-67694d684d37686e6474-build.zip"
+          "s3Key": "amplify-builds/fnKarunaUpload-31386c6f79486744346e-build.zip"
+        },
+        "fnKarunaDisaster": {
+          "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
+          "s3Key": "amplify-builds/fnKarunaDisaster-3075354352544f496341-build.zip"
         }
       }
     }

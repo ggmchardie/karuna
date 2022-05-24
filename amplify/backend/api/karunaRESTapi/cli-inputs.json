@@ -1,19 +1,6 @@
 {
   "version": 1,
   "paths": {
-    "/user/{userid}": {
-      "name": "/user/{userid}",
-      "lambdaFunction": "fnKarunaUser",
-      "permissions": {
-        "setting": "private",
-        "auth": [
-          "create",
-          "read",
-          "update",
-          "delete"
-        ]
-      }
-    },
     "/search": {
       "name": "/search",
       "lambdaFunction": "fnKarunaSearch",
@@ -30,6 +17,32 @@
     "/upload": {
       "name": "/upload",
       "lambdaFunction": "fnKarunaUpload",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    },
+    "/user": {
+      "name": "/user",
+      "lambdaFunction": "fnKarunaUser",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update",
+          "delete"
+        ]
+      }
+    },
+    "/disaster": {
+      "name": "/disaster",
+      "lambdaFunction": "fnKarunaDisaster",
       "permissions": {
         "setting": "private",
         "auth": [

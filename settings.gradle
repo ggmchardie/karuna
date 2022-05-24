@@ -17,6 +17,8 @@ dependencyResolutionManagement {
 rootProject.name = "KarunaApp"
 include ':app'
 
+include ':amplify:backend:function:fnKarunaDisaster'
 include ':amplify:backend:function:fnKarunaUpload'
 include ':amplify:backend:function:fnKarunaUser'
 include ':amplify:backend:function:fnKarunaSearch'
+
