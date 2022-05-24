@@ -11,12 +11,13 @@ package function;
          String uploadedByUser;
          String awsFaceId;
          String awsS3URL;
+         String imageFileName;
          String imageFile;
 
          public RequestClass() {
          }
 
-         public RequestClass(String surname, String firstName, String location, String vitalStats, String uploadedByUser, String awsFaceId, String awsS3URL, String imageFile) {
+         public RequestClass(String surname, String firstName, String location, String vitalStats, String uploadedByUser, String awsFaceId, String awsS3URL, String imageFileName, String imageFile) {
              this.surname = surname;
              this.firstName = firstName;
              this.location = location;
@@ -24,6 +25,7 @@ package function;
              this.uploadedByUser = uploadedByUser;
              this.awsFaceId = awsFaceId;
              this.awsS3URL = awsS3URL;
+             this.imageFileName = imageFileName;
              this.imageFile = imageFile;
          }
 
@@ -89,5 +91,13 @@ package function;
 
          public void setImageFile(String image) {
              this.imageFile = image;
+         }
+
+         public String getImageFileName() {
+             return imageFileName;
+         }
+
+         public void setImageFileName(String imageFileName) {
+             this.imageFileName = imageFileName;
          }
      }

@@ -25,7 +25,17 @@ import software.amazon.awssdk.services.rekognition.model.Reason;
 import software.amazon.awssdk.services.rekognition.model.RekognitionException;
 import software.amazon.awssdk.services.rekognition.model.UnindexedFace;
 
+import software.amazon.awssdk.services.s3.*;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
+import software.amazon.awssdk.core.sync.RequestBody;
+import org.apache.commons.io.FilenameUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -43,6 +53,7 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
     static String passwd = "T0pG3ar123";
     static String accessKey = "AKIAZPAU4HZFZ5Y6ACGF";
     static String secretKey = "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";
+    static String s3BucketName = "karuna-images";
 
     public ResponseClass handleRequest(RequestClass request, Context context){
         //String greetingString = String.format("Hello %s %s!", request.firstName, request.lastName);
@@ -55,7 +66,10 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
             if(!checkDisasterExists(locationName))
                 createRekognitionCollection(locationName);
 
-            addToCollection(locationName, request.imageFile);
+            String imageType = FilenameUtils.getExtension(request.imageFileName);
+
+            String imageId = addToCollection(locationName, request.imageFile);
+            saveToS3(s3BucketName, imageId, imageType, request.imageFile);
 
 
             Class.forName("org.mariadb.jdbc.Driver");
@@ -132,24 +146,40 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
         rekClient.close();
     }
 
-/*
-    public RekognitionClient createRekognitionClient()
+    public void saveToS3(String bucketName, String fileName, String imageType, String imageFile)
     {
-        System.out.println("Executing createRekognitionClient");
-
+        System.out.println("Executing saveToS3");
         Region region = Region.AP_SOUTHEAST_2;
         AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
 
-        RekognitionClient rekClient = RekognitionClient.builder()
+        S3Client s3Client = S3Client.builder()
                 .region(region)
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
                 .build();
 
-        return rekClient;
-    }
-*/
+        System.out.println("S3client created");
 
-    public static void addToCollection(String collectionId, String sourceImage) {
+        String keyName = fileName + "." + imageType;
+
+        System.out.println(keyName);
+
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)
+                .build();
+
+        ByteBuffer data = ByteBuffer.wrap(Base64.getDecoder().decode(imageFile));
+
+        s3Client.putObject(objectRequest, RequestBody.fromByteBuffer(data));
+        System.out.println("Put object completed");
+
+
+    }
+
+
+    public String addToCollection(String collectionId, String sourceImage) {
+
+        String imageId = "";
 
         try {
 
@@ -191,6 +221,7 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
                 System.out.println("  Face ID: " + faceRecord.face().faceId());
                 System.out.println("  Location:" + faceRecord.faceDetail().boundingBox().toString());
                 System.out.println("  Image ID: " + faceRecord.face().imageId());
+                imageId = faceRecord.face().imageId();
             }
 
             List<UnindexedFace> unindexedFaces = facesResponse.unindexedFaces();
@@ -207,6 +238,8 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
             System.out.println(e.getMessage());
             System.exit(1);
         }
+        return imageId;
+
     }
 
 
