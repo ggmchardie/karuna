@@ -4,7 +4,6 @@ CREATE PROCEDURE sp_addLocatedPerson
 (
 	IN _surname				VARCHAR(255),
 	IN _firstName			VARCHAR(255),
-	IN _dateEntered		DATETIME,
 	IN _location			VARCHAR(255),
 	IN _vitalStats			VARCHAR(20),
 	IN _uploadedByUser	VARCHAR(255),
