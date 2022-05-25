@@ -9,22 +9,22 @@ package function;
          String location;
          String vitalStats;
          String uploadedByUser;
-         String awsFaceId;
-         String awsS3URL;
+         String faceId;
+         String imageId;
          String imageFileName;
          String imageFile;
 
          public RequestClass() {
          }
 
-         public RequestClass(String surname, String firstName, String location, String vitalStats, String uploadedByUser, String awsFaceId, String awsS3URL, String imageFileName, String imageFile) {
+         public RequestClass(String surname, String firstName, String location, String vitalStats, String uploadedByUser, String faceId, String imageId, String imageFileName, String imageFile) {
              this.surname = surname;
              this.firstName = firstName;
              this.location = location;
              this.vitalStats = vitalStats;
              this.uploadedByUser = uploadedByUser;
-             this.awsFaceId = awsFaceId;
-             this.awsS3URL = awsS3URL;
+             this.faceId = faceId;
+             this.imageId = imageId;
              this.imageFileName = imageFileName;
              this.imageFile = imageFile;
          }
@@ -69,20 +69,20 @@ package function;
              this.uploadedByUser = uploadedByUser;
          }
 
-         public String getAwsFaceId() {
-             return awsFaceId;
+         public String getFaceId() {
+             return faceId;
          }
 
-         public void setAwsFaceId(String awsFaceId) {
-             this.awsFaceId = awsFaceId;
+         public void setFaceId(String faceId) {
+             this.faceId = faceId;
          }
 
-         public String getAwsS3URL() {
-             return awsS3URL;
+         public String getImageId() {
+             return imageId;
          }
 
-         public void setAwsS3URL(String awsS3URL) {
-             this.awsS3URL = awsS3URL;
+         public void setImageId(String imageId) {
+             this.imageId = imageId;
          }
 
          public String getImageFile() {
@@ -100,4 +100,6 @@ package function;
          public void setImageFileName(String imageFileName) {
              this.imageFileName = imageFileName;
          }
+
+
      }
