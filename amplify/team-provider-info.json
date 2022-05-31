@@ -27,7 +27,7 @@
         },
         "fnKarunaUpload": {
           "deploymentBucketName": "amplify-karuna-staging-151544-deployment",
-          "s3Key": "amplify-builds/fnKarunaUpload-6d555143656463386b52-build.zip"
+          "s3Key": "amplify-builds/fnKarunaUpload-53503649486945593162-build.zip"
         },
         "fnKarunaDisaster": {
           "deploymentBucketName": "amplify-karuna-staging-151544-deployment",

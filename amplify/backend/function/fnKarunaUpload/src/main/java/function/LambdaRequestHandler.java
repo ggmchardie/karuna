@@ -5,8 +5,8 @@ package function;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 
+import function.model.LocatedPerson;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.SdkBytes;
 import software.amazon.awssdk.regions.Region;
@@ -14,6 +14,9 @@ import software.amazon.awssdk.services.rekognition.*;
 import software.amazon.awssdk.services.rekognition.model.Attribute;
 import software.amazon.awssdk.services.rekognition.model.CreateCollectionRequest;
 import software.amazon.awssdk.services.rekognition.model.CreateCollectionResponse;
+import software.amazon.awssdk.services.rekognition.model.DetectFacesRequest;
+import software.amazon.awssdk.services.rekognition.model.DetectFacesResponse;
+import software.amazon.awssdk.services.rekognition.model.FaceDetail;
 import software.amazon.awssdk.services.rekognition.model.FaceRecord;
 import software.amazon.awssdk.services.rekognition.model.Image;
 import software.amazon.awssdk.services.rekognition.model.IndexFacesRequest;
@@ -28,14 +31,12 @@ import software.amazon.awssdk.services.rekognition.model.UnindexedFace;
 import software.amazon.awssdk.services.s3.*;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.core.sync.RequestBody;
-import org.apache.commons.io.FilenameUtils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyRequestEvent;
+import com.amazonaws.services.lambda.runtime.events.APIGatewayProxyResponseEvent;
+import com.google.gson.*;
+
+
 import java.nio.ByteBuffer;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -46,7 +47,8 @@ import java.util.Base64;
 import java.util.List;
 
 
-public class LambdaRequestHandler implements RequestHandler<RequestClass, ResponseClass>{
+//public class LambdaRequestHandler implements RequestHandler<RequestClass, ResponseClass>{
+public class LambdaRequestHandler implements RequestHandler<APIGatewayProxyRequestEvent, APIGatewayProxyResponseEvent>{
 
     static String url = "jdbc:mysql://karunadb.ctmmdehvnw1j.ap-southeast-2.rds.amazonaws.com:3306/karunadb";
     static String user = "karuna_admin";
@@ -55,57 +57,86 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
     static String secretKey = "QnzSTO+prR8vWcwP3dyoI6fENoys860LajFF4XqG";
     static String s3BucketName = "karuna-images";
 
-    public ResponseClass handleRequest(RequestClass request, Context context){
+    //public ResponseClass handleRequest(RequestClass request, Context context){
+    public APIGatewayProxyResponseEvent handleRequest(APIGatewayProxyRequestEvent request, Context context){
         //String greetingString = String.format("Hello %s %s!", request.firstName, request.lastName);
         String greetingString = "";
+        APIGatewayProxyResponseEvent responseEvent = new APIGatewayProxyResponseEvent();
 
         try {
+            System.out.println(request.getBody());
+
+            System.out.println("converting to gson...");
+            LocatedPerson locatedPerson = new Gson().fromJson(request.getBody(), LocatedPerson.class);
 
             String locationName = getActiveDisaster();
 
-            if(!checkDisasterExists(locationName))
+            if (!checkDisasterExists(locationName))
                 createRekognitionCollection(locationName);
 
-            String imageType = FilenameUtils.getExtension(request.imageFileName);
+            //String imageType = FilenameUtils.getExtension(locatedPerson.getImageFileName());
 
-            String imageId = addToCollection(locationName, request.imageFile);
-            saveToS3(s3BucketName, imageId, imageType, request.imageFile);
+            if(detectFacesinImage(locatedPerson.getImageFile()) > 1) {
+                throw new Exception("Too many faces in uploaded image.  Use image with 1 face.");
+            }
+            addToCollection(locatedPerson, locationName, locatedPerson.getImageFile());
+            saveToS3(s3BucketName, locatedPerson.getImageId(), locatedPerson.getImageFileType(), locatedPerson.getImageFile());
+            createDatabaseRecord(locatedPerson);
+
+            return responseEvent
+                    .withBody("Successfully added located person")
+                    .withStatusCode(200);
+        }
+        catch (Exception e) {
+
+            return responseEvent
+                    .withBody(e.getMessage())
+                    .withStatusCode(500);
+        }
+    }
 
 
+    public void createDatabaseRecord(LocatedPerson locatedPerson) {
+
+        try {
             Class.forName("org.mariadb.jdbc.Driver");
-            //System.out.println("Loaded driver");
+            System.out.println("Loaded driver");
 
-            //System.out.println("Trying Connection");
+            System.out.println("Trying Connection");
 
-            /*
-            try (Connection conn = DriverManager.getConnection(url, user, passwd)){
+            System.out.println(locatedPerson.getFaceId());
+            System.out.println(locatedPerson.getImageId());
+
+            System.out.println("Trying Connection");
+            try (Connection conn = DriverManager.getConnection(url, user, passwd)) {
                 System.out.println("Connected...");
 
-                String query = "{CALL sp_addLocatedPerson(?,?,?,?,?,?,?)}";
+                String query = "{CALL sp_addLocatedPerson(?,?,?,?,?,?,?,?)}";
 
                 CallableStatement stmt = conn.prepareCall(query);
-                stmt.setString("_surname", request.surname);
-                stmt.setString("_firstName", request.firstName);
-                stmt.setString("_location", request.location);
-                stmt.setString("_vitalStats",request.vitalStats);
-                stmt.setString("_uploadedByUser", request.uploadedByUser);
-                stmt.setString("_awsFaceId", request.awsFaceId);
-                stmt.setString("_awsS3URL", request.awsS3URL);
+                stmt.setString("_surname", locatedPerson.getSurname());
+                stmt.setString("_firstName", locatedPerson.getFirstName());
+                stmt.setString("_location", locatedPerson.getLocation());
+                stmt.setString("_vitalStats", locatedPerson.getVitalStats());
+                stmt.setString("_uploadedByUser", locatedPerson.getUploadedByUser());
+                stmt.setString("_faceId", locatedPerson.getFaceId());
+                stmt.setString("_imageId", locatedPerson.getImageId());
+                stmt.setString("_imageFileType", locatedPerson.getImageFileType());
 
-                greetingString = stmt.toString();
                 stmt.execute();
 
+                System.out.println(stmt.toString());
 
             } catch (SQLException e) {
                 System.err.println("Error: " + e.getMessage());
             }
-            */
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
 
-        return new ResponseClass(greetingString);
+        }
+        catch (ClassNotFoundException e) {
+            System.err.println("Error: " + e.getMessage());
+        }
     }
+
 
     public void createRekognitionCollection(String locationName)
     {
@@ -146,6 +177,7 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
         rekClient.close();
     }
 
+
     public void saveToS3(String bucketName, String fileName, String imageType, String imageFile)
     {
         System.out.println("Executing saveToS3");
@@ -177,9 +209,9 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
     }
 
 
-    public String addToCollection(String collectionId, String sourceImage) {
+    public void addToCollection(LocatedPerson locatedPerson, String collectionId, String sourceImage) {
 
-        String imageId = "";
+        //String imageId = "";
 
         try {
 
@@ -221,7 +253,10 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
                 System.out.println("  Face ID: " + faceRecord.face().faceId());
                 System.out.println("  Location:" + faceRecord.faceDetail().boundingBox().toString());
                 System.out.println("  Image ID: " + faceRecord.face().imageId());
-                imageId = faceRecord.face().imageId();
+                //imageId = faceRecord.face().imageId();
+
+                locatedPerson.setFaceId(faceRecord.face().faceId());
+                locatedPerson.setImageId(faceRecord.face().imageId());
             }
 
             List<UnindexedFace> unindexedFaces = facesResponse.unindexedFaces();
@@ -238,7 +273,6 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
             System.out.println(e.getMessage());
             System.exit(1);
         }
-        return imageId;
 
     }
 
@@ -280,6 +314,7 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
         return locationName;
     }
 
+
     public static boolean checkDisasterExists(String locationName) {
 
         try {
@@ -311,5 +346,41 @@ public class LambdaRequestHandler implements RequestHandler<RequestClass, Respon
         }
 
         return false;
+    }
+
+    public static int detectFacesinImage(String sourceImage) {
+
+        try {
+
+            System.out.println("Executing addToCollection");
+            System.out.println("Executing createRekognitionClient");
+
+            Region region = Region.AP_SOUTHEAST_2;
+            AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
+
+            RekognitionClient rekClient = RekognitionClient.builder()
+                    .region(region)
+                    .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
+                    .build();
+
+            Image souImage = Image.builder()
+                    .bytes(SdkBytes.fromByteBuffer(ByteBuffer.wrap(Base64.getDecoder().decode(sourceImage))))
+                    .build();
+
+            DetectFacesRequest facesRequest = DetectFacesRequest.builder()
+                    .attributes(Attribute.ALL)
+                    .image(souImage)
+                    .build();
+
+            DetectFacesResponse facesResponse = rekClient.detectFaces(facesRequest);
+            List<FaceDetail> faceDetails = facesResponse.faceDetails();
+
+            return faceDetails.size();
+
+        } catch (RekognitionException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+        return 0;
     }
 }

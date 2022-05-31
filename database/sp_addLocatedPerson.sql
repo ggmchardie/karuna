@@ -4,10 +4,12 @@ CREATE PROCEDURE sp_addLocatedPerson
 (
 	IN _surname				VARCHAR(255),
 	IN _firstName			VARCHAR(255),
-	IN _dateEntered		DATETIME,
 	IN _location			VARCHAR(255),
 	IN _vitalStats			VARCHAR(20),
-	IN _uploadedByUser	VARCHAR(255)
+	IN _uploadedByUser	VARCHAR(255),
+	IN _faceId			VARCHAR(255),
+	IN _imageId			VARCHAR(255),
+	IN _imageFileType	VARCHAR(25)
 )
 
 BEGIN
@@ -25,12 +27,13 @@ INSERT INTO tblLocatedPersons SET
 	surname				= _surname,
 	firstName			= _firstName,
 	dateEntered			= _dateEntered,
-	location				= _location,
+	location			= _location,
 	vitalStats			= _vitalStats,
 	uploadedByUser		= _uploadedByUser,
 	disasterId			= _disasterId,
-	awsFaceId			= _awsFaceId,
-	awsS3URL				= _awsS3URL;
+	faceId				= _faceId,
+	imageId				= _imageId,
+	imageFileType		= _imageFileType;
 
 END//
 

@@ -26,16 +26,17 @@ CREATE TABLE tblDisaster
 	
 CREATE TABLE tblLocatedPersons
 (
-	personId				INT AUTO_INCREMENT PRIMARY KEY,
+	personId			INT AUTO_INCREMENT PRIMARY KEY,
 	surname				VARCHAR(255),
 	firstName			VARCHAR(255),
 	dateEntered			DATETIME,
-	location				VARCHAR(255),
+	location			VARCHAR(255),
 	vitalStats			ENUM('alive','deceased'),
 	uploadedByUser		VARCHAR(255),
 	disasterId			INT,
-	awsFaceId			VARCHAR(255),
-	awsS3URL				VARCHAR(1023),
+	faceId				VARCHAR(255),
+	imageId				VARCHAR(255),
+	imageFileType		VARCHAR(25),
 	CONSTRAINT `fk_awsUserId`
    FOREIGN KEY (uploadedByUser) REFERENCES tblUsers (awsUserId),
    CONSTRAINT `fk_disasterId`
@@ -48,7 +49,7 @@ CREATE TABLE tblVerifiedOrganisations
 	orgId					INT AUTO_INCREMENT PRIMARY KEY,
 	organisationName	VARCHAR(255),
 	domainName			VARCHAR(255),
-	mainContactName	VARCHAR(255),
+	mainContactName		VARCHAR(255),
 	mainContactEmail	VARCHAR(255),
 	mainContactPhone	VARCHAR(255),
 	address				VARCHAR(1023)

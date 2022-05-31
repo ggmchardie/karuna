@@ -1,8 +1,10 @@
 
 
-package function;
-        
-     public class RequestClass {
+package function.model;
+
+import org.apache.commons.io.FilenameUtils;
+
+public class LocatedPerson {
 
          String surname;
          String firstName;
@@ -14,17 +16,15 @@ package function;
          String imageFileName;
          String imageFile;
 
-         public RequestClass() {
+         public LocatedPerson() {
          }
 
-         public RequestClass(String surname, String firstName, String location, String vitalStats, String uploadedByUser, String faceId, String imageId, String imageFileName, String imageFile) {
+         public LocatedPerson(String surname, String firstName, String location, String vitalStats, String uploadedByUser, String imageFileName, String imageFile) {
              this.surname = surname;
              this.firstName = firstName;
              this.location = location;
              this.vitalStats = vitalStats;
              this.uploadedByUser = uploadedByUser;
-             this.faceId = faceId;
-             this.imageId = imageId;
              this.imageFileName = imageFileName;
              this.imageFile = imageFile;
          }
@@ -101,5 +101,12 @@ package function;
              this.imageFileName = imageFileName;
          }
 
+         public String getImageFileType() {
+             return FilenameUtils.getExtension(this.imageFileName);
+         }
+
+         public String toString() {
+             return String.format(firstName + "," + surname + "," + location);
+         }
 
      }
